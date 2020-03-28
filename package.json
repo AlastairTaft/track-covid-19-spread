@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "mongodb": "^3.5.5",
+    "serverless": "^1.67.0"
+  },
+  "devDependencies": {
+    "jest": "^25.2.3",
+    "serverless-domain-manager": "^3.3.1",
+    "serverless-offline": "^6.1.2"
+  },
+  "scripts": {
+    "start": "MONGO_URL=mongodb://localhost:27017 MONGO_DATABASE=covid npx sls offline start",
+    "test": "jest"
+  }
+}

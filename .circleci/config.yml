@@ -1,0 +1,43 @@
+version: 2
+publish: &publish
+  working_directory: ~/app
+  docker:
+    - image: circleci/node:lts
+  steps:
+    - checkout
+    - restore_cache:
+        key: node_modules-{{ checksum "yarn.lock" }}
+    - run:
+        name: install dependencies
+        command: yarn install
+    - save_cache:
+        key: node_modules-{{ checksum "yarn.lock" }}
+        paths:
+          - ~/app/node_modules/
+    - run:
+        name: Deploy serverless
+        command: |
+          npx serverless deploy \
+            --stage production
+
+jobs:
+  production-publish:
+    <<: *publish
+
+workflows:
+  version: 2
+  publish_app:
+    jobs:
+      - production-approval:
+          type: approval
+          filters:
+            branches:
+              only:
+                - production
+      - production-publish:
+          requires:
+            - production-approval
+          filters:
+            branches:
+              only:
+                - production

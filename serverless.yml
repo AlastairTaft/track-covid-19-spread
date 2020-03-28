@@ -1,0 +1,28 @@
+service: pinpoint-covid
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  environment:
+    NODE_ENV: ${self:provider.stage}
+    MONGO_URL: ${env:MONGO_URL}
+    MONGO_DATABASE: ${env:MONGO_DATABASE}
+plugins:
+  - serverless-offline
+  - serverless-domain-manager
+functions:
+  api:
+    handler: server/index.submitLocationHistory
+    events: 
+      - http:
+          path: /submit-location-history
+          method: POST
+custom:
+  serverless-offline:
+    port: 5001
+  customDomain:
+    domainName: www.trackcovid19spread.com
+    basePath: ''
+    certificateName: '*.trackcovid19spread.com'
+    createRoute53Record: true
