@@ -22,7 +22,7 @@ custom:
   serverless-offline:
     port: 5001
   customDomain:
-    domainName: www.trackcovid19spread.com
+    domainName: api.trackcovid19spread.com
     basePath: ''
     certificateName: '*.trackcovid19spread.com'
     createRoute53Record: true
