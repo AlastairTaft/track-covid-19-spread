@@ -11,12 +11,31 @@
     virus spread.
   </p>
 
+  <p>Currently there's two ways to get your location history.</p>
+  <p>
+    1) Visit your 
+    <a href="https://www.google.com/maps/timeline" target="_blank">
+      Google Maps Timeline
+    </a> and for every recent day, select it on the left.
+    <img 
+      src="./img/google-timeline-select-date-screenshot.png" 
+      alt="google timeline select date screnshot"
+    />
+  </p>
+
+  <p>Then export the KML file via the settings button on the right.
+    <img 
+      src="./img/google-timeline-export-kml-screenshot.png" 
+      alt="google timeline export kml screenshot" 
+    />
+  </p>
+
   <input type="file" id="files-input" />
   <input type="number" id="infection-input" placeholder="Estimated days since infection" />
   <script type="text/javascript">
 
     var handleFileRead = function(event){
-      var xml = parseXml(xmlString)
+      var xml = parseXml(event.target.result)
       var json = JSON.parse(xml2json(xml, '  '))
       debugger
     }
