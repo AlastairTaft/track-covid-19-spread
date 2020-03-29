@@ -1,4 +1,7 @@
 {
+  "bugs": {
+    "url": "https://github.com/AlastairTaft/track-covid-19-spread/issues"
+  },
   "dependencies": {
     "mongodb": "^3.5.5",
     "serverless": "^1.67.0"

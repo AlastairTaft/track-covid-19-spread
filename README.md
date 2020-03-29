@@ -7,7 +7,7 @@ If you have been diagnosed with the corona virus visit [trackcovid19spread.com](
 Your data is anonymised before it reaches our servers. And we don't ask you to login to any accounts that could potentially identify you. 
 
 ## What do we do with the data?
-We provide an API for other developers to access the location history of diagnosed corona virus patients. The data can be used to build a helpful tools, for example tracking the spread and estimating who's areas at risk.
+We provide an API for other developers to access the location history of diagnosed corona virus patients. The data can be used to build a helpful tools, for example tracking the spread and estimating areas at risk.
 
 # Developers
 
@@ -17,31 +17,45 @@ COVID-19 patient's location history can be accessed via below documented API. Fe
 
 ## /location-history
 
-Get the number of households inside a GeoJSON object.
+Get location data for COVID-19 patients.
 Method: GET
 
-### Parameters
-| Name  | Required | Description
-| ------------- | ------------- | ------- |
-| geometry | Yes | A [GeoJSON Polygon object](https://tools.ietf.org/html/rfc7946#section-3.1.6). _NOTE: coordinate points are always an array with longitude being the first element and latitude being the second._ |
+TBD
 
 ## /submit-location-history
 
-Submit location history for a diagnosed COVID-19 patient.
+Submit location history for a diagnosed COVID-19 patient. All location history must be stored as a [GeoJSON Feature Collection](https://tools.ietf.org/html/rfc7946#section-3.3).
 Method: POST
 ### Parameters
 | Name  | Required | Description
 | ------------- | ------------- | ------- |
-| userId | Yes | A unique string that is unique for the patient but has no personal identifying information. |
-| locationHistory | Yes | An array of location history data points. |
-| locationHistory[].dateTime | Yes | An integer EPOCH of when the patient arrived at this location. |
-| locationHistory[].timeAtLocation | No | The time (in milliseconds) the patient spent at the location, if known. |
-| locationHistory[].location | Yes | The location. A [GeoJSON Polygon object](https://tools.ietf.org/html/rfc7946#section-3.1.2). |
+| type | Yes | Accepts only a value of "FeatureCollection" |
+| features | Yes | An array of [Geo JSON Feature](https://tools.ietf.org/html/rfc7946#section-3.2) records | 
+
+e.g.
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          50.123,
+          51.321,
+          0
+        ]
+      }
+    }
+  ]
+}
+```
 
 
 ## TODO
 - [x] Parse the data that comes from Google and submit it
 - [x] Setup website
 - [x] Improve frontend design
-- [ ] Update API to match GeoJSON Feature Collection
+- [x] Update API to match GeoJSON Feature Collection
 - [ ] Add developer API to access the data
