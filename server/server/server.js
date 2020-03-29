@@ -6,6 +6,7 @@ var { ServerError } = require('./errors')
  * @return {Function}
  */
 const handleServerResponse = handler => async (...args) => {
+  console.log(JSON.stringify(args), null, 2)
   try {
     var result = await handler(...args)
     return {
