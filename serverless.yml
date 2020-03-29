@@ -1,4 +1,4 @@
-service: pinpoint-covid
+service: track-covid-19-spread
 provider:
   name: aws
   runtime: nodejs12.x
@@ -17,7 +17,8 @@ functions:
     events: 
       - http:
           path: /submit-location-history
-          method: POST
+          method: ANY
+          cors: true
 custom:
   serverless-offline:
     port: 5001

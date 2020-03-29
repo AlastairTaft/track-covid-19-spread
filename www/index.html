@@ -141,13 +141,17 @@
      */
     var saveFeatureCollection = function(featureCollection){
       return fetch(
+        // Crude check if we're on prod
+        window.location.hostname.endsWith('trackcovid19spread.com') ?
+        'https://api.trackcovid19spread.com/submit-location-history' :
         'http://localhost:3000/dev/submit-location-history', 
-        //'https://api.trackcovid19spread.com/submit-location-history', 
         {
           method: 'POST',
           header: {
             'Content-Type': 'application/json'
           },
+          mode: 'cors', 
+          credentials: 'same-origin',
           body: JSON.stringify(featureCollection),
         }
       ).then(response => {
