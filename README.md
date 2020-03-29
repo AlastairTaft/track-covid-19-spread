@@ -40,9 +40,8 @@ Method: POST
 
 
 ## TODO
-- [ ] Parse the data that comes from Google and submit it
-- [ ] Setup website
-- [ ] Add a captcha
-- [ ] Improve frontend design
+- [x] Parse the data that comes from Google and submit it
+- [x] Setup website
+- [x] Improve frontend design
+- [ ] Update API to match GeoJSON Feature Collection
 - [ ] Add developer API to access the data
-- [ ] Import any available third party data sources
