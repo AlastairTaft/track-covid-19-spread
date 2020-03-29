@@ -2,15 +2,16 @@
 <head>
   <link rel="stylesheet" href="./css/theme.css" />
   <link rel="stylesheet" href="./css/style.css" />
-  <script type="text/javascript" src="./js/xml2json.js"></script>
+  <script type="text/javascript" src="./js/vendor/togeojson.js"></script>
   <script type="text/javascript" src="./js/misc/misc.js"></script>
+  <script type="text/javascript" src="./js/data/GeoJSONScrubber.js"></script>
 </head>
 <body>
 
   <h1>Help track the spread</h1>
   
   <p>
-    Submit your location data and we will anonymously use it to track the 
+    Submit your location data, we'll scrub it, anonymize it and use it to track the 
     virus spread.
   </p>
 
@@ -32,7 +33,7 @@
     />
   </p>
 
-  <p><strong>2)</strong> Select yesterday as the date and export the KML data for this day too (the same as step 1).</strong> 
+  <p><strong>2)</strong> Select yesterday as the date and export the KML data for this day too (the same as step 1).
     <img 
       src="./img/google-timeline-select-date-screenshot.png" 
       alt="google timeline export kml screenshot" 
@@ -43,9 +44,10 @@
     <strong>3)</strong> Repeat the above steps for every day until you reach the date you suspected you contracted the virus.
   </p>
   
-  <p>
-    <strong>4)</strong> Drop all your files here and they will be submitted.
-    
+  <div>
+    <p>
+      <strong>4)</strong> Drop all your files here and they will be submitted.
+    </p>
     <div id="upload-box" class="uploadBox">
       <input 
         type="file" 
@@ -57,11 +59,14 @@
       <div class="successBox"></div>
     </div>
     <div id="fail-box" class="failBox" style="display: none;"></div>
-  </p>
+  </div>
   <p id="thankyou-message" style="display: none;">
     Thanks for your help fighting the virus! 💪
   </p>
-  <p id="fail-message" style="display: none;"></p>
+  <p id="fail-message-container" style="display: none;">
+    <span id="fail-message"></span>
+    <a href="javascript:;" id="try-again-button">Try again</a>
+  </p>
   <script type="text/javascript">
 
     var uploadEl = document.getElementById('upload-box')
@@ -69,13 +74,33 @@
     var successEl = document.getElementById('success-message')
     var failEl = document.getElementById('fail-box')
     var thankyouMessageEl = document.getElementById('thankyou-message')
+    var failMessageContainerEl = document.getElementById('fail-message-container')
     var failMessageEl = document.getElementById('fail-message')
+    var tryAgainButton = document.getElementById('try-again-button')
 
+    tryAgainButton.addEventListener('click', 
+      () => toggleState(STATE_ENUM.READY))
+
+    // Scrubs out sensitive data
+    var geoJSONScrubber = new covid.data.GeoJSONScrubber()
+
+    /**
+     * @enum
+     */
     const STATE_ENUM = {
       READY: 'READY',
       UPLOADING: 'UPLOADING',
       DONE: 'DONE',
       FAIL: 'FAIL',
+    }
+
+    /**
+     * Set the on page error message. Be sure to also call
+     * `toggleState(STATE_ENUM.FAIL)` else it will not be visible.
+     * @param {string} msg
+     */
+    function setErrorMessage(msg){
+      failMessageEl.innerText = msg
     }
 
     /**
@@ -86,7 +111,7 @@
       uploadEl.style.display = 'none' 
       successEl.style.display = 'none'
       thankyouMessageEl.style.display = 'none'
-      failMessageEl.style.display = 'none'
+      failMessageContainerEl.style.display = 'none'
       fileInput.className = ''
       failEl.style.display = 'none'
 
@@ -104,30 +129,78 @@
           break;
         case STATE_ENUM.FAIL: 
           failEl.style.display = 'block'
-          failMessageEl.style.display = 'block'
+          failMessageContainerEl.style.display = 'block'
           break;
       }
     }
 
+    /**
+     * Saves the location history feature collection to the server.
+     * @param {GeoJSONFeatureCollection} featureCollectionn
+     * @returns {Promise}
+     */
+    var saveFeatureCollection = function(featureCollection){
+      return fetch(
+        'http://localhost:3000/dev/submit-location-history', 
+        {
+          method: 'POST',
+          header: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(featureCollection),
+        }
+      ).then(response => {
+        return response.json()
+        .then(result => {
+          if (response.status !== 200)
+            throw new Error(result.message)
+          return result
+        })
+      })
+    }
+
+    /**
+     * Handle when the file is successfully read.
+     * @param {object} evennt
+     */
     var handleFileRead = function(event){
-      var xml = parseXml(event.target.result)
-      var json = JSON.parse(xml2json(xml, '  '))
-      debugger
+      var xmlStr = event.target.result
+      var xmlDoc = (new DOMParser()).parseFromString(xmlStr, 'text/xml')
+      var geoJSON = toGeoJSON.kml(xmlDoc)
+      geoJSONScrubber.scrub(geoJSON)
       toggleState(STATE_ENUM.UPLOADING)
-      setTimeout(() => toggleState(STATE_ENUM.DONE), 5000)
+      saveFeatureCollection(geoJSON)
+      .then(() => toggleState(STATE_ENUM.DONE))
+      .catch(error => {
+        setErrorMessage(error.message)
+        toggleState(STATE_ENUM.FAIL)
+        fileInput.value = ''
+        throw error
+      })
     }
 
+    /**
+     * Handle when the FileReader instance errors out.
+     * @param {object} event
+     */
     var handleFileError = function(event){
-      throw event.target.error
+      var error = event.target.error    
+      setErrorMessage(error.message)
+      toggleState(STATE_ENUM.FAIL)
+      fileInput.value = ''
+      throw error
     }
 
+    /**
+     * Handle the selecting of files.
+     * @param {object} e The event
+     */
     var handleFileInput = function(e){
       var file = e.target.files[0]
+      // Let's keep it simple, no streams for now, but we won't be able to 
+      // handle large files.
       var reader = new FileReader()
       reader.addEventListener('load', handleFileRead)
-      reader.addEventListener('progress', event => {
-        debugger
-      })
       reader.addEventListener('error', handleFileError)
       reader.readAsText(file, "UTF-8")
     }
