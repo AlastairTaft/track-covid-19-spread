@@ -18,6 +18,10 @@ const handleServerResponse = handler => async (...args) => {
     var statusCode = err instanceof ServerError ? err.statusCode : 500
     return {
       statusCode,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+      },
       body: JSON.stringify(
         {
           message: err.message,
