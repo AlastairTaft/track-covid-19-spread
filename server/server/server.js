@@ -19,7 +19,7 @@ const handleServerResponse = handler => async (...args) => {
     return {
       statusCode,
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': args[0].headers['Origin'] || args[0].headers['origin'] || '*',
         'Access-Control-Allow-Credentials': true,
       },
       body: JSON.stringify(
