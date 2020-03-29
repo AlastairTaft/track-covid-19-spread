@@ -8,7 +8,7 @@ const insertFeature = async function(db, feature, requesterInfo){
   var collection = db.collection('features')
   var record = await collection.findOne({ feature })
   if (record) return record
-  return collection.insert(
+  return collection.insertOne(
     {
       feature,
       requesterInfo,

@@ -23,8 +23,6 @@ var FeatureCollection = function(){
  * Collection object.
  */
 FeatureCollection.prototype.parse = function(dto){
-  console.log(`FeatureCollection.prototype.parse#dto`, dto)
-  console.log(`dto['type'] !== 'FeatureCollection'`, dto['type'] !== 'FeatureCollection')
   assert(
     dto['type'] == 'FeatureCollection', 
     `Expected GeoJSON Feature Collection object to have type 
