@@ -17,6 +17,7 @@ const handleServerResponse = handler => async (...args) => {
     console.log('process.env.NODE_ENV', process.env.NODE_ENV)
     var statusCode = err instanceof ServerError ? err.statusCode : 500
     return {
+      isBase64Encoded: false,
       statusCode,
       headers: {
         'Access-Control-Allow-Origin': '*',
