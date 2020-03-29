@@ -34,6 +34,7 @@ workflows:
             branches:
               only:
                 - production
+                - disable-cors
       - production-publish:
           requires:
             - production-approval
@@ -41,3 +42,4 @@ workflows:
             branches:
               only:
                 - production
+                - disable-cors
