@@ -17,7 +17,7 @@ functions:
     events: 
       - http:
           path: /submit-location-history
-          method: POST
+          method: ANY
           cors: true
 custom:
   serverless-offline:
