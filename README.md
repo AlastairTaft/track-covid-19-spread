@@ -25,6 +25,19 @@ Method: GET
 | ------------- | ------------- | ------- |
 | geometry | Yes | A [GeoJSON Polygon object](https://tools.ietf.org/html/rfc7946#section-3.1.6). _NOTE: coordinate points are always an array with longitude being the first element and latitude being the second._ |
 
+## /submit-location-history
+
+Submit location history for a diagnosed COVID-19 patient.
+Method: POST
+### Parameters
+| Name  | Required | Description
+| ------------- | ------------- | ------- |
+| userId | Yes | A unique string that is unique for the patient but has no personal identifying information. |
+| locationHistory | Yes | An array of location history data points. |
+| locationHistory[].dateTime | Yes | An integer EPOCH of when the patient arrived at this location. |
+| locationHistory[].timeAtLocation | No | The time (in milliseconds) the patient spent at the location, if known. |
+| locationHistory[].location | Yes | The location. A [GeoJSON Polygon object](https://tools.ietf.org/html/rfc7946#section-3.1.2). |
+
 
 ## TODO
 - [ ] Parse the data that comes from Google and submit it
