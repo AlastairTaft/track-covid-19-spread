@@ -7,7 +7,7 @@ If you have been diagnosed with the corona virus visit [trackcovid19spread.com](
 Your data is anonymised before it reaches our servers. And we don't ask you to login to any accounts that could potentially identify you. 
 
 ## What do we do with the data?
-We provide an API for other developers to access the location history of diagnosed corona virus patients. The data can be used to build a helpful tools, for example tracking the spread and estimating areas at risk.
+We provide an API for other developers to access the location history of diagnosed corona virus patients. The data can be used to build all sorts of helpful tools, for example tracking the spread and estimating areas at risk.
 
 # Developers
 

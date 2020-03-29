@@ -51,6 +51,12 @@ const submitLocationHistory = async event => {
     await insertFeature(db, feature, requesterInfo)
   }))
   client.close()
+
+  return {
+    // As a convenience return some valid JSON so that client's don't 
+    // fall over trying to parse the response.
+    "all good": "👌"
+  }
 }
 
 module.exports = {
