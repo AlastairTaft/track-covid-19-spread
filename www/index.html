@@ -150,6 +150,8 @@
           header: {
             'Content-Type': 'application/json'
           },
+          mode: 'cors', // no-cors, *cors, same-origin
+          credentials: 'same-origin',
           body: JSON.stringify(featureCollection),
         }
       ).then(response => {
