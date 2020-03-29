@@ -1,0 +1,45 @@
+
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.2);
+  }
+}
+
+.uploadBox {
+  overflow: hidden;
+  background-color: #e4e1e1;
+}
+
+.uploadBox input {
+  height: 50vh;
+  width: 100%;
+  margin: 10px 0;
+  background-color: #e4e1e1;
+  box-sizing: border-box;
+}
+
+.pulse {
+  animation: pulse 1s ease-in-out infinite alternate;
+}
+
+.successBox {
+  height: 50vh;
+  width: 100%;
+  background-image: url(./../img/baseline_cloud_done_green_48dp.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 10px 0;
+}
+
+.failBox {
+  height: 50vh;
+  width: 100%;
+  background-image: url(./../img/baseline_error_black_48dp.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 10px 0;
+}

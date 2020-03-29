@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <head>
+  <link rel="stylesheet" href="./css/theme.css" />
+  <link rel="stylesheet" href="./css/style.css" />
   <script type="text/javascript" src="./js/xml2json.js"></script>
+  <script type="text/javascript" src="./js/misc/misc.js"></script>
 </head>
 <body>
 
@@ -11,33 +14,107 @@
     virus spread.
   </p>
 
-  <p>Currently there's two ways to get your location history.</p>
   <p>
-    1) Visit your 
-    <a href="https://www.google.com/maps/timeline" target="_blank">
-      Google Maps Timeline
-    </a> and for every recent day, select it on the left.
+    <strong>1)</strong> Tap  
+    <a id="timeline-link" href="https://www.google.com/maps/timeline" target="_blank">
+      this Google Maps Timeline link
+    </a> 
+    <script type="text/javascript">
+      // Update the timeline link to go straight to today to eliminate a step. 
+      var timelineLinkElement = document.getElementById('timeline-link')
+      var timelineLink = `https://www.google.com/maps/timeline?pb=!1m2!1m1!1s${covid.misc.formatToShortDate(new Date())}`
+      timelineLinkElement.setAttribute('href', timelineLink)
+    </script>
+    and select the settings button on the right. Hit 'Export this day to KML'.
     <img 
-      src="./img/google-timeline-select-date-screenshot.png" 
+      src="./img/google-timeline-export-kml-screenshot.png" 
       alt="google timeline select date screnshot"
     />
   </p>
 
-  <p>Then export the KML file via the settings button on the right.
+  <p><strong>2)</strong> Select yesterday as the date and export the KML data for this day too (the same as step 1).</strong> 
     <img 
-      src="./img/google-timeline-export-kml-screenshot.png" 
+      src="./img/google-timeline-select-date-screenshot.png" 
       alt="google timeline export kml screenshot" 
     />
   </p>
 
-  <input type="file" id="files-input" />
-  <input type="number" id="infection-input" placeholder="Estimated days since infection" />
+  <p>
+    <strong>3)</strong> Repeat the above steps for every day until you reach the date you suspected you contracted the virus.
+  </p>
+  
+  <p>
+    <strong>4)</strong> Drop all your files here and they will be submitted.
+    
+    <div id="upload-box" class="uploadBox">
+      <input 
+        type="file" 
+        id="files-input" 
+        multiple="multiple" 
+      />
+    </div>
+    <div id="success-message" style="display: none;">
+      <div class="successBox"></div>
+    </div>
+    <div id="fail-box" class="failBox" style="display: none;"></div>
+  </p>
+  <p id="thankyou-message" style="display: none;">
+    Thanks for your help fighting the virus! 💪
+  </p>
+  <p id="fail-message" style="display: none;"></p>
   <script type="text/javascript">
+
+    var uploadEl = document.getElementById('upload-box')
+    var fileInput = document.getElementById('files-input')
+    var successEl = document.getElementById('success-message')
+    var failEl = document.getElementById('fail-box')
+    var thankyouMessageEl = document.getElementById('thankyou-message')
+    var failMessageEl = document.getElementById('fail-message')
+
+    const STATE_ENUM = {
+      READY: 'READY',
+      UPLOADING: 'UPLOADING',
+      DONE: 'DONE',
+      FAIL: 'FAIL',
+    }
+
+    /**
+     * Toggle the view state of the files upload UI.
+     * @param {STATE_ENUM} state
+     */
+    function toggleState(state){
+      uploadEl.style.display = 'none' 
+      successEl.style.display = 'none'
+      thankyouMessageEl.style.display = 'none'
+      failMessageEl.style.display = 'none'
+      fileInput.className = ''
+      failEl.style.display = 'none'
+
+      switch (state){
+        case STATE_ENUM.READY: 
+          uploadEl.style.display = 'block'
+          break;
+        case STATE_ENUM.UPLOADING: 
+          uploadEl.style.display = 'block'
+          fileInput.className = 'pulse'
+          break;
+        case STATE_ENUM.DONE: 
+          successEl.style.display = 'block'
+          thankyouMessageEl.style.display = 'block'
+          break;
+        case STATE_ENUM.FAIL: 
+          failEl.style.display = 'block'
+          failMessageEl.style.display = 'block'
+          break;
+      }
+    }
 
     var handleFileRead = function(event){
       var xml = parseXml(event.target.result)
       var json = JSON.parse(xml2json(xml, '  '))
       debugger
+      toggleState(STATE_ENUM.UPLOADING)
+      setTimeout(() => toggleState(STATE_ENUM.DONE), 5000)
     }
 
     var handleFileError = function(event){
@@ -48,12 +125,15 @@
       var file = e.target.files[0]
       var reader = new FileReader()
       reader.addEventListener('load', handleFileRead)
+      reader.addEventListener('progress', event => {
+        debugger
+      })
       reader.addEventListener('error', handleFileError)
       reader.readAsText(file, "UTF-8")
     }
 
-    var fileInput = document.getElementById('files-input')
     fileInput.addEventListener('change', handleFileInput)
   </script>
+
 </body>
 </html>

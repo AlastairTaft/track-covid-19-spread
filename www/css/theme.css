@@ -1,0 +1,27 @@
+
+body {
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  width: 780px;
+  margin: 0 auto;
+}
+
+img {
+  border: 1px solid #e4e1e1;
+  max-width: 100%;
+  margin: 10px 0;
+}
+
+input[type="file"] {
+  display: block;
+  background-color: #e4e1e1;
+  background-image: url(./../img/baseline_cloud_upload_white_48dp.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  font-size: 16px;
+  padding: 20px;
+  color: transparent;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  visibility: hidden;
+}
