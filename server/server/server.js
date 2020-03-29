@@ -21,6 +21,10 @@ const handleServerResponse = handler => async (...args) => {
       headers: {
         'Access-Control-Allow-Origin': args[0].headers['Origin'] || args[0].headers['origin'] || '*',
         'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers':
+          'Content-Type, Content-Encoding',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(
         {
