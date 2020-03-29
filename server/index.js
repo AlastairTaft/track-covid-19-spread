@@ -14,7 +14,7 @@ var { ServerError } = require('./server/errors')
  * e.g.
  * ```
  * {
- *   "captchaToken": "foo",
+ *   "type": "FeatureCollection",
  *   "userId": "xyz",
  *   "locationHistory": [
  *     {
