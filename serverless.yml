@@ -1,4 +1,4 @@
-service: pinpoint-covid
+service: track-covid-19-spread
 provider:
   name: aws
   runtime: nodejs12.x
