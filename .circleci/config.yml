@@ -41,4 +41,3 @@ workflows:
             branches:
               only:
                 - production
-                - dev-api
