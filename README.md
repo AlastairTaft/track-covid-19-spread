@@ -18,9 +18,22 @@ COVID-19 patient's location history can be accessed via below documented API. Fe
 ## /location-history
 
 Get location data for COVID-19 patients.
+
 Method: GET
 
-TBD
+### Parameters
+| Name       | Required | Description |
+| ---------- | -------- | ----------- |
+| geo-within | Yes      | A valid [Geo JSON geometry object](https://tools.ietf.org/html/rfc7946#section-3.1) |
+| skip       | No       | An integer, skip the first n records | 
+| limit      | No       | Get up to this many records back, max limit is 500 | 
+
+Returns a [Geo JSON FeatureCollection](https://tools.ietf.org/html/rfc7946#section-3.3)
+
+e.g.
+```
+/location-history?geo-within=%7B%22type%22%3A%22Polygon%22%2C%22coordinates%22%3A%5B%5B%5B140%2C-40%5D%2C%5B150%2C-40%5D%2C%5B150%2C-50%5D%2C%5B140%2C-50%5D%2C%5B140%2C-40%5D%5D%5D%7D
+```
 
 ## /submit-location-history
 
