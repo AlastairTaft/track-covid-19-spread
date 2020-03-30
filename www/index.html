@@ -163,37 +163,19 @@
         })
       })
     }
-
+    
     /**
-     * Handle when the file is successfully read.
-     * @param {object} evennt
+     * Read the contents of a file
+     * @param {File} file
+     * @returns {Promise<string>}
      */
-    var handleFileRead = function(event){
-      var xmlStr = event.target.result
-      var xmlDoc = (new DOMParser()).parseFromString(xmlStr, 'text/xml')
-      var geoJSON = toGeoJSON.kml(xmlDoc)
-      geoJSONScrubber.scrub(geoJSON)
-      toggleState(STATE_ENUM.UPLOADING)
-      saveFeatureCollection(geoJSON)
-      .then(() => toggleState(STATE_ENUM.DONE))
-      .catch(error => {
-        setErrorMessage(error.message)
-        toggleState(STATE_ENUM.FAIL)
-        fileInput.value = ''
-        throw error
+    var readFileContents = function(file){
+      return new Promise(function(res, rej){
+        var reader = new FileReader()
+        reader.addEventListener('load', e => res(e.target.result))
+        reader.addEventListener('error', e => rej(e.target.error))
+        reader.readAsText(file, "UTF-8")
       })
-    }
-
-    /**
-     * Handle when the FileReader instance errors out.
-     * @param {object} event
-     */
-    var handleFileError = function(event){
-      var error = event.target.error    
-      setErrorMessage(error.message)
-      toggleState(STATE_ENUM.FAIL)
-      fileInput.value = ''
-      throw error
     }
 
     /**
@@ -201,13 +183,44 @@
      * @param {object} e The event
      */
     var handleFileInput = function(e){
-      var file = e.target.files[0]
       // Let's keep it simple, no streams for now, but we won't be able to 
       // handle large files.
-      var reader = new FileReader()
-      reader.addEventListener('load', handleFileRead)
-      reader.addEventListener('error', handleFileError)
-      reader.readAsText(file, "UTF-8")
+      Promise.all(
+        Array.from(e.target.files).map(file => readFileContents(file))
+      )
+      .then(fileContents => {
+        var collections = fileContents.map(str => {
+          var xmlStr = event.target.result
+          var xmlDoc = (new DOMParser()).parseFromString(xmlStr, 'text/xml')
+          var geoJSON = toGeoJSON.kml(xmlDoc)
+          geoJSONScrubber.scrub(geoJSON)
+          return geoJSON
+        })
+
+        // Amalgamate all colletions together
+        var featureColletion = {
+          'type': 'FeatureCollection',
+          'features': [],
+        }
+        collections.forEach(({ features }) => 
+          features.forEach(f => featureColletion['features'].push(f)))
+        
+        toggleState(STATE_ENUM.UPLOADING)
+        saveFeatureCollection(featureColletion)
+        .then(() => toggleState(STATE_ENUM.DONE))
+        .catch(error => {
+          setErrorMessage(error.message)
+          toggleState(STATE_ENUM.FAIL)
+          fileInput.value = ''
+          throw error
+        })
+      })
+      .catch(error => {
+        setErrorMessage(error.message)
+        toggleState(STATE_ENUM.FAIL)
+        fileInput.value = ''
+        throw error
+      })
     }
 
     fileInput.addEventListener('change', handleFileInput)
