@@ -15,6 +15,8 @@ Please use our API to get COVID-19 patient's historic location data. Use it ethi
 
 COVID-19 patient's location history can be accessed via below documented API. Feel free to use our API for submitting data too rather than having to build a data set from scratch.
 
+Postman collection [here](https://www.getpostman.com/collections/54111bc0dbf4e859c823).
+
 ## /location-history
 
 Get location data for COVID-19 patients.
@@ -30,9 +32,9 @@ Method: GET
 
 Returns a [Geo JSON FeatureCollection](https://tools.ietf.org/html/rfc7946#section-3.3)
 
-e.g.
+Example url path.
 ```
-/location-history?geo-within=%7B%22type%22%3A%22Polygon%22%2C%22coordinates%22%3A%5B%5B%5B140%2C-40%5D%2C%5B150%2C-40%5D%2C%5B150%2C-50%5D%2C%5B140%2C-50%5D%2C%5B140%2C-40%5D%5D%5D%7D
+/location-history?geo-within=%7B%22type%22%3A%22Polygon%22%2C%22coordinates%22%3A%5B%5B%5B100%2C-20%5D%2C%5B110%2C-20%5D%2C%5B110%2C-30%5D%2C%5B100%2C-30%5D%2C%5B100%2C-20%5D%5D%5D%7D
 ```
 
 ## /submit-location-history
