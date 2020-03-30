@@ -1,19 +1,15 @@
-# Help track the spread. Anonymously submit your location history. Fight the virus. 💪
+# What is it?
+An API to query the location data for COVID-19 diagnosed cases.
 
-## What can you do to help?
-If you have been diagnosed with the corona virus visit [trackcovid19spread.com](https://www.trackcovid19spread.com) and submit your recent location data.
+# Why
+Tracking the spread of the virus is immensly valuable. But if everyone rolls their own solution for collecting this data its value is diminished. By being API only we make the data set easy to access and easy to contribute too. Giving other devs a head start on their solution building.
 
-## Is it anonymous? 
-Your data is anonymised before it reaches our servers. And we don't ask you to login to any accounts that could potentially identify you. 
+To kick things off we've provided [a simple website](https://www.trackcovid19spread.com) any COVID-19 positive users can use to anonymously submit their location data to help track the spread. 
 
-## What do we do with the data?
-We provide an API for other developers to access the location history of diagnosed corona virus patients. The data can be used to build all sorts of helpful tools, for example tracking the spread and estimating areas at risk.
+# API 
+Please use our API to get COVID-19 patient's historic location data. Use it ethically to build solutions to help fight the virus. Please share it, let's build a single source of truth with critical mass.
 
-# Developers
-
-Please use our API to get COVID-19 patient's historic location data. Use it ethically to build solutions to help fight the virus. We aim to do one small piece of the puzzle that can be used as a stepping stone to leap frog other develops to build bigger and better apps.
-
-COVID-19 patient's location history can be accessed via below documented API. Feel free to use our API for submitting data too rather than having to build a data set from scratch.
+Alternatively feel free to fork this if you need to roll your own solution.
 
 Postman collection [here](https://www.getpostman.com/collections/54111bc0dbf4e859c823).
 
@@ -44,10 +40,10 @@ Submit location history for a diagnosed COVID-19 patient. All location history m
 Method: POST
 
 ### Parameters
-| Name  | Required | Description
-| ------------- | ------------- | ------- |
-| type | Yes | Accepts only a value of "FeatureCollection" |
-| features | Yes | An array of [Geo JSON Feature](https://tools.ietf.org/html/rfc7946#section-3.2) records | 
+| Name     | Required | Description |
+| -------- | -------- | ----------- |
+| type     | Yes      | Accepts only a value of "FeatureCollection" |
+| features | Yes      | An array of [Geo JSON Feature](https://tools.ietf.org/html/rfc7946#section-3.2) records | 
 
 e.g.
 ```json
