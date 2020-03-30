@@ -28,15 +28,15 @@ workflows:
   version: 2
   publish_app:
     jobs:
-      #- production-approval:
-      #    type: approval
-      #    filters:
-      #      branches:
-      #        only:
-      #          - production
+      - production-approval:
+          type: approval
+          filters:
+            branches:
+              only:
+                - production
       - production-publish:
-      #    requires:
-      #      - production-approval
+          requires:
+            - production-approval
           filters:
             branches:
               only:
