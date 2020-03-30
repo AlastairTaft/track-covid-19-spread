@@ -3,7 +3,7 @@ var { getConnection } = require('./db/connect')
 var { handleServerResponse } = require('./server/server')
 var { ServerError } = require('./server/errors')
 var FeatureCollection = require('./geojson/FeatureCollection')
-var { insertFeature } = require('./db/features')
+var { insertFeature, searchFeatures } = require('./db/features')
 
 /**
  * Accept a Geo JSON FeatureCollection as the request body
@@ -59,6 +59,40 @@ const submitLocationHistory = async event => {
   }
 }
 
+/**
+ * Get location history
+ */
+const getLocationHistory = async event => {
+  var geoWithin = event.queryStringParameters['geo-within']
+  var { limit, skip } = event.queryStringParameters
+  var limit = limit !== undefined ? parseInt(limit) : limit
+  var skip = skip !== undefined ? parseInt(skip) : skip
+  geoWithin = JSON.parse(geoWithin)
+
+  if (limit !== undefined && isNaN(limit))
+    throw new ServerError('Invalid value for \'limit\'.')
+  if (limit !== undefined && limit > 500)
+    throw new ServerError('Max value for \'limit\' is 500.')
+  if (skip !== undefined && isNaN(skip))
+    throw new ServerError('Invalid value for \'skip\'.')
+
+  var { db, client } = await getConnection()
+  var features = await searchFeatures(
+    db, 
+    { 
+      geoWithin,
+      skip,
+      limit,
+    },
+  )
+  client.close()
+  return {
+    // TODO Make this a feature collection
+    features
+  }
+}
+
 module.exports = {
   submitLocationHistory: handleServerResponse(submitLocationHistory),
+  getLocationHistory: handleServerResponse(getLocationHistory),
 }

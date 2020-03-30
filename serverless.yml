@@ -12,12 +12,19 @@ plugins:
   - serverless-offline
   - serverless-domain-manager
 functions:
-  api:
+  submitLocationHistory:
     handler: server/index.submitLocationHistory
     events: 
       - http:
           path: /submit-location-history
-          method: ANY
+          method: POST
+          cors: true
+  getLocationHistory:
+    handler: server/index.getLocationHistory
+    events: 
+      - http:
+          path: /location-history
+          method: GET
           cors: true
 custom:
   serverless-offline:
