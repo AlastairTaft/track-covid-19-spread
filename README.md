@@ -1,5 +1,5 @@
 # What is it?
-An API to query the location data for COVID-19 diagnosed cases.
+An API to query the location data for COVID-19 diagnosed cases. Built during the [COVID-19 Global Hackathon](https://devpost.com/software/test-test-test-test-123)
 
 # Why
 Tracking the spread of the virus is immensly valuable. But if everyone rolls their own solution for collecting this data its value is diminished. By being API only we make the data set easy to access and easy to contribute too. Giving other devs a head start on their solution building.
