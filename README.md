@@ -40,7 +40,9 @@ Example url path.
 ## /submit-location-history
 
 Submit location history for a diagnosed COVID-19 patient. All location history must be stored as a [GeoJSON Feature Collection](https://tools.ietf.org/html/rfc7946#section-3.3).
+
 Method: POST
+
 ### Parameters
 | Name  | Required | Description
 | ------------- | ------------- | ------- |
