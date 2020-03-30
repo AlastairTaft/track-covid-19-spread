@@ -32,7 +32,8 @@ const searchFeatures = async function(db, options){
     },
     {projection:{_id:0}},
   ).skip(skip).limit(limit) 
-  return features.toArray()
+  var features = await features.toArray()
+  return features.map(f => f.feature)
 }
 
 module.exports = {

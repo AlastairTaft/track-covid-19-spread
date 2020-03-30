@@ -87,8 +87,9 @@ const getLocationHistory = async event => {
   )
   client.close()
   return {
-    // TODO Make this a feature collection
-    features
+    // Return a feature collection
+    "type": "FeatureCollection",
+    features,
   }
 }
 
