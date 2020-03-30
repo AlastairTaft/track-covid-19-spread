@@ -7,7 +7,7 @@ Tracking the spread of the virus is immensly valuable. But if everyone rolls the
 To kick things off we've provided [a simple website](https://www.trackcovid19spread.com) any COVID-19 positive users can use to anonymously submit their location data to help track the spread. 
 
 # API 
-Please use our API to get COVID-19 patient's historic location data. Use it ethically to build solutions to help fight the virus. Please share it, let's build a single source of truth with critical mass.
+Please use our API to get COVID-19 patient's historic location data or to submit location history. Use it ethically to build solutions to help fight the virus. Please share it, let's build a single source of truth with critical mass.
 
 Alternatively feel free to fork this if you need to roll your own solution.
 
