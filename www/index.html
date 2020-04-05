@@ -8,223 +8,57 @@
 </head>
 <body>
 
-  <h1>Help track the spread</h1>
+  <img 
+    height="100px" 
+    style="border:none;"
+    src="./img/tas-trace-together-logo.png" 
+    alt="TAS Trace Together" 
+  />
+  <h1>TAS Trace Together</h1>
   
   <p>
-    Submit your location data, we'll scrub it, anonymize it and use it to track the 
-    virus spread.
+    One of the most useful tools we have in limiting the spread of the virus is 
+    contact tracing. If we can quickly inform those who are at risk of 
+    unknowingly contracting the virus, those individuals can take precautions 
+    to prevent passing it on to others. Speed is an advantage.
   </p>
 
+  <h2>What is it?</h2>
   <p>
-    <strong>1)</strong> Tap  
-    <a id="timeline-link" href="https://www.google.com/maps/timeline" target="_blank">
-      this Google Maps Timeline link
-    </a> 
-    <script type="text/javascript">
-      // Update the timeline link to go straight to today to eliminate a step. 
-      var timelineLinkElement = document.getElementById('timeline-link')
-      var timelineLink = `https://www.google.com/maps/timeline?pb=!1m2!1m1!1s${covid.misc.formatToShortDate(new Date())}`
-      timelineLinkElement.setAttribute('href', timelineLink)
-    </script>
-    and select the settings button on the right. Hit 'Export this day to KML'.
-    <img 
-      src="./img/google-timeline-export-kml-screenshot.png" 
-      alt="google timeline select date screnshot"
-    />
+    <strong>TAS Trace Together</strong> is an app built to aid community contact 
+    tracing. It was built with Tasmania in-mind as being the target audience. But
+    there's no reason it can't be used elsewhere. Or 
+    <a href="https://github.com/AlastairTaft/APITasTraceTogether">the</a> 
+    <a href="https://github.com/AlastairTaft/TasTraceTogether">code</a> can be 
+    forked and used by other developers in other regions.
   </p>
 
-  <p><strong>2)</strong> Select yesterday as the date and export the KML data for this day too (the same as step 1).
-    <img 
-      src="./img/google-timeline-select-date-screenshot.png" 
-      alt="google timeline export kml screenshot" 
-    />
-  </p>
-
+  <h2>Where can I get it?</h2>
   <p>
-    <strong>3)</strong> Repeat the above steps for every day until you reach the date you suspected you contracted the virus.
+    Both the Apple store and Google Play store have long app approval wait times
+    right now due to the impact of the virus. A direct link to the app will 
+    be provided in the interim soon, and once live on the stores this page 
+    will be updated.
   </p>
-  
-  <div>
-    <p>
-      <strong>4)</strong> Drop all your files here and they will be submitted.
-    </p>
-    <div id="upload-box" class="uploadBox">
-      <input 
-        type="file" 
-        id="files-input" 
-        multiple="multiple" 
-      />
-    </div>
-    <div id="success-message" style="display: none;">
-      <div class="successBox"></div>
-    </div>
-    <div id="fail-box" class="failBox" style="display: none;"></div>
-  </div>
-  <p id="thankyou-message" style="display: none;">
-    Thanks for your help fighting the virus! 💪
+
+  <h2>How does it work?</h2>
+  <p>
+    It tracks your location anonymously. If you have been diagnosed with 
+    COVID-19, you can report this through the app. Anyone who has been in the 
+    same place, at the same time, while you are potentially infectious and who 
+    is also using the app will be informed. They can then take precautions to
+    limit the spread, such as self isolating.
   </p>
-  <p id="fail-message-container" style="display: none;">
-    <span id="fail-message"></span>
-    <a href="javascript:;" id="try-again-button">Try again</a>
+
+  <p>See our <a href="./privacy-policy.html">privacy policy</a>.</p>
+
+  <h2>Inspiration</h2>
+  <p>The work for this app started out as a solution for a global hackathon 
+    where developers got together to work on solutions for the COVID-19 crisis.
+    You can see the original webpage for that submission 
+    <a href="./covid-19-global-hackathon.html">here</a> and you can see other
+    fantastic solutions <a href="https://covid-global-hackathon.devpost.com/submissions">here</a>
   </p>
-  <script type="text/javascript">
-
-    var uploadEl = document.getElementById('upload-box')
-    var fileInput = document.getElementById('files-input')
-    var successEl = document.getElementById('success-message')
-    var failEl = document.getElementById('fail-box')
-    var thankyouMessageEl = document.getElementById('thankyou-message')
-    var failMessageContainerEl = document.getElementById('fail-message-container')
-    var failMessageEl = document.getElementById('fail-message')
-    var tryAgainButton = document.getElementById('try-again-button')
-
-    tryAgainButton.addEventListener('click', 
-      () => toggleState(STATE_ENUM.READY))
-
-    // Scrubs out sensitive data
-    var geoJSONScrubber = new covid.data.GeoJSONScrubber()
-
-    /**
-     * @enum
-     */
-    const STATE_ENUM = {
-      READY: 'READY',
-      UPLOADING: 'UPLOADING',
-      DONE: 'DONE',
-      FAIL: 'FAIL',
-    }
-
-    /**
-     * Set the on page error message. Be sure to also call
-     * `toggleState(STATE_ENUM.FAIL)` else it will not be visible.
-     * @param {string} msg
-     */
-    function setErrorMessage(msg){
-      failMessageEl.innerText = msg
-    }
-
-    /**
-     * Toggle the view state of the files upload UI.
-     * @param {STATE_ENUM} state
-     */
-    function toggleState(state){
-      uploadEl.style.display = 'none' 
-      successEl.style.display = 'none'
-      thankyouMessageEl.style.display = 'none'
-      failMessageContainerEl.style.display = 'none'
-      fileInput.className = ''
-      failEl.style.display = 'none'
-
-      switch (state){
-        case STATE_ENUM.READY: 
-          uploadEl.style.display = 'block'
-          break;
-        case STATE_ENUM.UPLOADING: 
-          uploadEl.style.display = 'block'
-          fileInput.className = 'pulse'
-          break;
-        case STATE_ENUM.DONE: 
-          successEl.style.display = 'block'
-          thankyouMessageEl.style.display = 'block'
-          break;
-        case STATE_ENUM.FAIL: 
-          failEl.style.display = 'block'
-          failMessageContainerEl.style.display = 'block'
-          break;
-      }
-    }
-
-    /**
-     * Saves the location history feature collection to the server.
-     * @param {GeoJSONFeatureCollection} featureCollectionn
-     * @returns {Promise}
-     */
-    var saveFeatureCollection = function(featureCollection){
-      return fetch(
-        // Crude check if we're on prod
-        window.location.hostname.endsWith('trackcovid19spread.com') ?
-        'https://api.trackcovid19spread.com/submit-location-history' :
-        'http://localhost:3000/dev/submit-location-history', 
-        {
-          method: 'POST',
-          header: {
-            'Content-Type': 'application/json'
-          },
-          mode: 'cors', 
-          credentials: 'same-origin',
-          body: JSON.stringify(featureCollection),
-        }
-      ).then(response => {
-        return response.json()
-        .then(result => {
-          if (response.status !== 200)
-            throw new Error(result.message)
-          return result
-        })
-      })
-    }
-    
-    /**
-     * Read the contents of a file
-     * @param {File} file
-     * @returns {Promise<string>}
-     */
-    var readFileContents = function(file){
-      return new Promise(function(res, rej){
-        var reader = new FileReader()
-        reader.addEventListener('load', e => res(e.target.result))
-        reader.addEventListener('error', e => rej(e.target.error))
-        reader.readAsText(file, "UTF-8")
-      })
-    }
-
-    /**
-     * Handle the selecting of files.
-     * @param {object} e The event
-     */
-    var handleFileInput = function(e){
-      // Let's keep it simple, no streams for now, but we won't be able to 
-      // handle large files.
-      Promise.all(
-        Array.from(e.target.files).map(file => readFileContents(file))
-      )
-      .then(fileContents => {
-        var collections = fileContents.map(str => {
-          var xmlStr = event.target.result
-          var xmlDoc = (new DOMParser()).parseFromString(xmlStr, 'text/xml')
-          var geoJSON = toGeoJSON.kml(xmlDoc)
-          geoJSONScrubber.scrub(geoJSON)
-          return geoJSON
-        })
-
-        // Amalgamate all colletions together
-        var featureColletion = {
-          'type': 'FeatureCollection',
-          'features': [],
-        }
-        collections.forEach(({ features }) => 
-          features.forEach(f => featureColletion['features'].push(f)))
-        
-        toggleState(STATE_ENUM.UPLOADING)
-        saveFeatureCollection(featureColletion)
-        .then(() => toggleState(STATE_ENUM.DONE))
-        .catch(error => {
-          setErrorMessage(error.message)
-          toggleState(STATE_ENUM.FAIL)
-          fileInput.value = ''
-          throw error
-        })
-      })
-      .catch(error => {
-        setErrorMessage(error.message)
-        toggleState(STATE_ENUM.FAIL)
-        fileInput.value = ''
-        throw error
-      })
-    }
-
-    fileInput.addEventListener('change', handleFileInput)
-  </script>
 
 </body>
 </html>
