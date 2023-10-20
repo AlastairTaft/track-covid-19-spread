@@ -1,3 +1,6 @@
+# ⚠️ Archived
+This repo is not maintained.
+
 # What is it?
 An API to query the location data for COVID-19 diagnosed cases. Built during the [COVID-19 Global Hackathon](https://devpost.com/software/test-test-test-test-123)
 
